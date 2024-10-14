@@ -1,4 +1,4 @@
-## Questão 1: (Exercício 2.1-4 do livro do Cormen)
+# Questão 1: (Exercício 2.1-4 do livro do Cormen)
 
 **Escreva um pseudocódigo para a busca linear e mostre, usando invariância de laço, que o seu algoritmo está correto.**
 
@@ -24,11 +24,10 @@ Se A[i] ≠ v, o laço continua para a próxima iteração, e a invariância é 
 
 Assim, a invariância de laço garante que, ao final do laço, ou encontramos o valor v e retornamos sua posição correta, ou verificamos todos os elementos e retornamos NULL se v não estiver presente. Logo, o algoritmo de busca linear está correto.
 
-## Questão 2: (Exercício 2.1-4 do livro do Cormen)
+# Questão 2:
 
-**Escreva um pseudocódigo para a busca linear e mostre, usando invariância de laço, que o seu algoritmo está correto.**
+**Implemente o algoritmo de ordenação por inserção e crie uma cópia anotada dele que mede o número de operações no modelo da Random Access Machine  (RAM, seção 2.2 livro do Cormen). Usando entradas de tamanho crescente, mostre em um gráfico quando o tempo de execução no modelo RAM diverge de medições feitas em uma máquina real.**
 
-#### Pseudocódigo para busca linear:
 ```python
 import time
 import matplotlib.pyplot as plt
@@ -98,4 +97,9 @@ def compare_performance():
 compare_performance()
 
 ```
-Mostrando, usando invariância de laço, que o algoritmo está correto:
+![Grafico](https://github.com/user-attachments/assets/ede671eb-3922-4e93-8be6-124d63594ebf)
+
+# Questão 3:
+
+**Mostre numericamente com suas implementações dos algoritmos de insertion-sort e merge-sort como se comporta o desempenho de cada algoritmo utilizando entradas de tamanho crescente, considerando entradas de pior caso, melhor caso e caso médio. Análise, para cada tipo de entrada, se existe algum ponto a partir do qual um algoritmo passa a ser mais rápido que o outro.**
+
