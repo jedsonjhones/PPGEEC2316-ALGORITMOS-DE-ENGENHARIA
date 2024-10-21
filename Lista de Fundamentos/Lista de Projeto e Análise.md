@@ -95,7 +95,12 @@ tamanho da matriz para um valor maior.
 
 # Questão 2:
 
-**Implemente o algoritmo de ordenação por inserção e crie uma cópia anotada dele que mede o número de operações no modelo da Random Access Machine  (RAM, seção 2.2 livro do Cormen). Usando entradas de tamanho crescente, mostre em um gráfico quando o tempo de execução no modelo RAM diverge de medições feitas em uma máquina real.**
+**Escolha um algoritmo recorrente para aplicar um dos 4 métodos de resolução de recorrência descritos no capítulo 4 para medir o custo da recorrência do algoritmo escolhido. Compare o resultado com medições de tempo.**
+
+*Merge Sort*
+O algoritmo escolhido foi o Merge Sort, e ele segue o paradigma de "dividir e conquistar" e possui a seguinte função de recorrência para seu tempo de execução T(n): <br>
+T(n) = aT\left(\frac{n}{b}\right) + O(n^d)
+
 
 ```python
 import time
