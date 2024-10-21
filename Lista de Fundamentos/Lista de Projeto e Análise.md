@@ -2,27 +2,81 @@
 
 **Mostre numericamente com suas implementações dos algoritmos de multiplicação de matrizes que o algoritmo de Strassen é mais rápido que o algoritmo convencional.**
 
-#### Pseudocódigo para busca linear:
+#### Medindo o tempo de execução de cada algoritmo para diferentes tamanhos de matrizes, em python:
 ```python
-BUSCALINEAR(A, n, v)
-  para i = 1 até n faça
-      se A[i] == v então
-          retorne i
-  retorne NULL
+import numpy as np
+import time
+
+# Função para multiplicação convencional
+def matmul_conventional(A, B):
+    n = len(A)
+    C = np.zeros((n, n))
+    for i in range(n):
+        for j in range(n):
+            for k in range(n):
+                C[i][j] += A[i][k] * B[k][j]
+    return C
+
+# Função para multiplicação de matrizes pelo algoritmo de Strassen
+def strassen(A, B):
+    n = len(A)
+    if n == 1:
+        return A * B
+    else:
+        mid = n // 2
+        # Dividindo as matrizes em submatrizes
+        A11, A12, A21, A22 = A[:mid, :mid], A[:mid, mid:], A[mid:, :mid], A[mid:, mid:]
+        B11, B12, B21, B22 = B[:mid, :mid], B[:mid, mid:], B[mid:, :mid], B[mid:, mid:]
+
+        # 7 multiplicações de Strassen
+        M1 = strassen(A11 + A22, B11 + B22)
+        M2 = strassen(A21 + A22, B11)
+        M3 = strassen(A11, B12 - B22)
+        M4 = strassen(A22, B21 - B11)
+        M5 = strassen(A11 + A12, B22)
+        M6 = strassen(A21 - A11, B11 + B12)
+        M7 = strassen(A12 - A22, B21 + B22)
+
+        # Combinando os resultados
+        C11 = M1 + M4 - M5 + M7
+        C12 = M3 + M5
+        C21 = M2 + M4
+        C22 = M1 - M2 + M3 + M6
+
+        # Combinando submatrizes em uma matriz
+        C = np.zeros((n, n))
+        C[:mid, :mid], C[:mid, mid:], C[mid:, :mid], C[mid:, mid:] = C11, C12, C21, C22
+        return C
+
+# Função para comparar tempos de execução
+def compare_times(n):
+    A = np.random.rand(n, n)
+    B = np.random.rand(n, n)
+
+    # Tempo da multiplicação convencional
+    start_time = time.time()
+    matmul_conventional(A, B)
+    conv_time = time.time() - start_time
+
+    # Tempo do algoritmo de Strassen
+    start_time = time.time()
+    strassen(A, B)
+    strassen_time = time.time() - start_time
+
+    return conv_time, strassen_time
+
+# Testando para tamanhos de matrizes 64 e 128
+sizes = [64, 128]
+for n in sizes:
+    conv_time, strassen_time = compare_times(n)
+    print(f"Tamanho da matriz: {n}x{n}")
+    print(f"Tempo de execução da multiplicação convencional: {conv_time:.5f} segundos")
+    print(f"Tempo de execução do algoritmo de Strassen: {strassen_time:.5f} segundos")
+    print("-" * 50)
+
 ```
-Mostrando, usando invariância de laço, que o algoritmo está correto:
-Definindo a seguinte invariância de laço: No início de cada iteração do laço, para cada índice j tal que 1 ≤ j < i, o valor A[j] ≠ v.
 
-Essa invariância diz que, antes de iniciar a iteração i-ésima, o algoritmo já verificou todas as posições anteriores e não encontrou o valor v.
 
-- Inicialização: Antes da primeira iteração do laço (quando i=1), ainda não verificamos nenhum elemento da lista. A condição de invariância é verdadeira, pois não há elementos anteriores a A[1] para verificar.
-
-- Manutenção: Suponha que a invariância seja verdadeira no início da iteração i-ésima. Durante essa iteração, o algoritmo verifica o elemento A[i]: <br>
-Se A[i] == v, o algoritmo retorna i, o que está correto, pois encontrou o valor v na posição i. <br>
-Se A[i] ≠ v, o laço continua para a próxima iteração, e a invariância é mantida, já que verificamos um novo elemento e confirmamos que A[i] ≠ v.
-- Termino: O laço termina quando i = n + 1, ou seja, quando todos os elementos de A[1…n] foram verificados. Nesse ponto, se o algoritmo não retornar um índice dentro do laço, podemos concluir que o valor v não está presente na lista, e o algoritmo corretamente retorna NULL.
-
-Assim, a invariância de laço garante que, ao final do laço, ou encontramos o valor v e retornamos sua posição correta, ou verificamos todos os elementos e retornamos NULL se v não estiver presente. Logo, o algoritmo de busca linear está correto.
 
 # Questão 2:
 
