@@ -99,7 +99,15 @@ tamanho da matriz para um valor maior.
 
 *Merge Sort*
 O algoritmo escolhido foi o Merge Sort, e ele segue o paradigma de "dividir e conquistar" e possui a seguinte função de recorrência para seu tempo de execução T(n): <br>
-T(n) = aT\left(\frac{n}{b}\right) + O(n^d)
+![image](https://github.com/user-attachments/assets/89542f7d-1a2e-4264-8507-f9988df16257) <br>
+No caso do Merge Sort, temos:
+a=2 (número de subproblemas) <br>
+b=2 (fator de divisão do problema) <br>
+d=1 (o custo da combinação é linear em relação a 𝑛) <br>
+
+Assim, aplicamos o Teorema Mestre, comparando n^d com n^(logb^a):
+
+
 
 
 ```python
