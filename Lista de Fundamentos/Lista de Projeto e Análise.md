@@ -105,7 +105,9 @@ a=2 (número de subproblemas) <br>
 b=2 (fator de divisão do problema) <br>
 d=1 (o custo da combinação é linear em relação a 𝑛) <br>
 
-Assim, aplicamos o Teorema Mestre, comparando n^d com n^(logb^a):
+Assim, aplicamos o Teorema Mestre, comparando n^d com n^(logb^a): <br>
+![image](https://github.com/user-attachments/assets/8bf66115-2959-4ae2-a69b-7bdbe820d02a)
+
 
 
 
