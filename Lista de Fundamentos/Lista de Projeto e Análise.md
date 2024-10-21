@@ -164,4 +164,22 @@ Assim, O tempo de execução está aumentando, mas não de maneira linear,que é
 
 # Questão 3:
 
-**O problema de balanceamento de cargas busca atribuir tarefas de tamanhos diferentes a trabalhadores, de modo a minimizar a carga máxima que um trabalhador irá executar. Em um problema em que temos n tarefas e k trabalhadores (n > k), considere que o balanceador irá distribuir as n/k primeiras tarefas para o primeiro trabalhador, as n/k tarefas seguintes para o segundo trabalhador, e assim por diante. Mostre numericamente como permutar aleatoriamente os dados de entrada, que são as cargas de cada tarefa, pode influenciar na solução desse balanceador.**
+**O problema de balanceamento de cargas busca atribuir tarefas de tamanhos diferentes a trabalhadores, de modo a minimizar a carga máxima que um trabalhador irá executar. Em um problema em que temos n tarefas e k trabalhadores (n > k), considere que o balanceador irá distribuir as n/k primeiras tarefas para o primeiro trabalhador, as n/k tarefas seguintes para o segundo trabalhador, e assim por diante. Mostre numericamente como permutar aleatoriamente os dados de entrada, que são as cargas de cada tarefa, pode influenciar na solução desse balanceador.** <br>
+
+Se eu por exemplo considerar Considere n=6 tarefas e k=2 trabalhadores e Tamanhos das tarefas: [5,2,4,7,1,3]:
+<br>
+
+se eu fizer uma Distribuição sem permutação eu vou ter:<br>
+Trabalhador 1: [5,2,4] → Carga total = 5 + 2 + 4 = 11 <br>
+Trabalhador 2: [7,1,3] → Carga total = 7 + 1 + 3 = 11. <br>
+assim a carga máxima atribuída a um trabalhador é 11. <br>
+<br>
+Agora se eu fizer uma permutação aleatória das tarefas: <br>
+Permutação aleatória, por exemplo: [4,1,7,2,3,5]. <br>
+Trabalhador 1: [4,1,7] → Carga total = 4 + 1 + 7 = 12. <br>
+Trabalhador 2: [2,3,5] → Carga total = 2 + 3 + 5 = 10. <br>
+A carga máxima agora é 12. <br>
+
+Assim podemos notar que a permutação aleatória das tarefas pode resultar em uma distribuição de cargas que aumenta ou diminui a carga 
+máxima atribuída aos trabalhadores.
+
