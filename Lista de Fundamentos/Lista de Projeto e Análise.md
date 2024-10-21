@@ -108,81 +108,60 @@ d=1 (o custo da combinação é linear em relação a 𝑛) <br>
 Assim, aplicamos o Teorema Mestre, comparando n^d com n^(logb^a): <br>
 ![image](https://github.com/user-attachments/assets/8bf66115-2959-4ae2-a69b-7bdbe820d02a)
 
-
-
-
-
+*Implementação em Python**
 ```python
 import time
-import matplotlib.pyplot as plt
+import random
 
-# Implementação manual do algoritmo de ordenação por inserção
-def insertion_sort(arr):
-    n = len(arr)
-    for i in range(1, n):
-        key = arr[i]
-        j = i - 1
-        while j >= 0 and arr[j] > key:
-            arr[j + 1] = arr[j]
-            j -= 1
-        arr[j + 1] = key
+# Função Merge Sort
+def merge_sort(arr):
+    if len(arr) > 1:
+        mid = len(arr) // 2  # Encontra o ponto médio
+        L = arr[:mid]  # Dividi a lista ao meio
+        R = arr[mid:]
 
-# Implementação anotada do algoritmo de ordenação por inserção para contar operações RAM
-def insertion_sort_annotated(arr):
-    n_operations = 0  # Contador de operações RAM
-    n = len(arr)
-    for i in range(1, n):
-        key = arr[i]
-        n_operations += 1  # Atribuição key = arr[i]
-        j = i - 1
-        n_operations += 1  # Atribuição de j = i - 1
-        while j >= 0 and arr[j] > key:
-            n_operations += 2  # Comparação e acesso a arr[j]
-            arr[j + 1] = arr[j]
-            n_operations += 1  # Atribuição de arr[j + 1] = arr[j]
-            j -= 1
-            n_operations += 1  # Decremento de j
-        n_operations += 1  # Saída do while
-        arr[j + 1] = key
-        n_operations += 1  # Atribuição final arr[j + 1] = key
-    return n_operations
+        merge_sort(L)  # Ordena a primeira metade
+        merge_sort(R)  # Ordena a segunda metade
 
-# Função para comparar tempo de execução e operações RAM
-def compare_performance():
-    sizes = [10, 50, 100, 200, 500, 1000, 2000, 5000]  # Tamanhos dos arrays
-    time_results = []
-    ram_operations = []
+        i = j = k = 0
 
-    for size in sizes:
-        arr = list(range(size, 0, -1))  # Vetor decrescente como pior caso
-        
-        # Medindo o tempo real
-        start_time = time.time()
-        insertion_sort(arr.copy())  # Usa uma cópia para não alterar o original
-        end_time = time.time()
-        time_results.append(end_time - start_time)
+        # Merge das duas metades
+        while i < len(L) and j < len(R):
+            if L[i] < R[j]:
+                arr[k] = L[i]
+                i += 1
+            else:
+                arr[k] = R[j]
+                j += 1
+            k += 1
 
-        # Medindo as operações no modelo RAM
-        n_operations = insertion_sort_annotated(arr.copy())
-        ram_operations.append(n_operations)
+        # Verifica se ainda há elementos em L ou R
+        while i < len(L):
+            arr[k] = L[i]
+            i += 1
+            k += 1
 
-    # Plotando os resultados
-    plt.figure(figsize=(10, 6))
-    plt.plot(sizes, time_results, label="Tempo Real (s)", marker='o')
-    plt.plot(sizes, ram_operations, label="Operações RAM", marker='x')
-    plt.xlabel('Tamanho da Entrada')
-    plt.ylabel('Tempo/Operações')
-    plt.title('Comparação: Tempo Real vs Operações RAM')
-    plt.legend()
-    plt.grid(True)
-    plt.show()
+        while j < len(R):
+            arr[k] = R[j]
+            j += 1
+            k += 1
 
-# Executa a comparação
-compare_performance()
+# Medir o tempo de execução
+def measure_time(n):
+    arr = random.sample(range(n), n)  # Gera uma lista aleatória
+    start_time = time.time()
+    merge_sort(arr)
+    end_time = time.time()
+    return end_time - start_time
 
+for size in [1000, 2000, 5000, 10000, 20000]:
+    exec_time = measure_time(size)
+    print(f"Tamanho da entrada: {size}, Tempo de execução: {exec_time:.6f} segundos")
 ```
-![Grafico](https://github.com/user-attachments/assets/ede671eb-3922-4e93-8be6-124d63594ebf)
+![image](https://github.com/user-attachments/assets/019fbaed-3dbd-42e2-aef4-7bf6aa851e7d) <br>
+Assim, O tempo de execução está aumentando, mas não de maneira linear,que é o que era esperado, já que o Merge Sort tem complexidade  O(n log n)
+
 
 # Questão 3:
 
-**Mostre numericamente com suas implementações dos algoritmos de insertion-sort e merge-sort como se comporta o desempenho de cada algoritmo utilizando entradas de tamanho crescente, considerando entradas de pior caso, melhor caso e caso médio. Análise, para cada tipo de entrada, se existe algum ponto a partir do qual um algoritmo passa a ser mais rápido que o outro.**
+**O problema de balanceamento de cargas busca atribuir tarefas de tamanhos diferentes a trabalhadores, de modo a minimizar a carga máxima que um trabalhador irá executar. Em um problema em que temos n tarefas e k trabalhadores (n > k), considere que o balanceador irá distribuir as n/k primeiras tarefas para o primeiro trabalhador, as n/k tarefas seguintes para o segundo trabalhador, e assim por diante. Mostre numericamente como permutar aleatoriamente os dados de entrada, que são as cargas de cada tarefa, pode influenciar na solução desse balanceador.**
