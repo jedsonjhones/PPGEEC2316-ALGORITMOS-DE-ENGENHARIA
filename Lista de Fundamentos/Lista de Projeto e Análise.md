@@ -1,7 +1,14 @@
 # Questão 1: 
 
-**Mostre numericamente com suas implementações dos algoritmos de multiplicação de matrizes que o algoritmo de Strassen é mais rápido que o algoritmo convencional.**
+**Mostre numericamente com suas implementações dos algoritmos de multiplicação de matrizes que o algoritmo de Strassen é mais rápido que o algoritmo convencional.** <br>
 
+*Multiplicação Convencional de Matrizes:* <br>
+A multiplicação convencional de duas matrizes A e B nxn tem uma complexidade de tempo O(n^3) onde o número de operações escala com o cubo do tamanho da matriz.
+<br>
+
+*Algoritmo de Strassen:*<br>
+O algoritmo de Strassen é uma forma otimizada de multiplicação de matrizes que utiliza divisões e conquistas recursivas. Ele reduz a complexidade para aproximadamente O(n^2.81) usando sete multiplicações de submatrizes em vez de oito. Isso leva a uma melhora na eficiência para grandes matrizes.
+<br>
 #### Medindo o tempo de execução de cada algoritmo para diferentes tamanhos de matrizes, em python:
 ```python
 import numpy as np
@@ -75,6 +82,14 @@ for n in sizes:
     print("-" * 50)
 
 ```
+![image](https://github.com/user-attachments/assets/556c4f3e-34ed-45b6-87b9-f4d9c2522bf3)
+
+Assim, conseguimos mostrar que o algoritmo de Strassen não supera o método convencional para tamanhos menores de matrizes, mas para 
+matrizes significativamente maiores, o Strassen começa a se tornar mais eficiente, especialmente quando o tamanho da matriz aumenta
+além de certo ponto, no nosso caso ja notamos isso apartir de matrizes de 128x128, e assim se torna mais evidente comforme altera o 
+tamanho da matriz para um valor maior.
+
+
 
 
 
