@@ -83,66 +83,98 @@ class HeapMaximo:
 
 **Mostre com experimentos numéricos quando suas próprias implementações de Quicksort e do Quicksort aleatório são mais vantajosas quando comparadas uma com a outra.**
 
-*Merge Sort*
-O algoritmo escolhido foi o Merge Sort, e ele segue o paradigma de "dividir e conquistar" e possui a seguinte função de recorrência para seu tempo de execução T(n): <br>
-![image](https://github.com/user-attachments/assets/89542f7d-1a2e-4264-8507-f9988df16257) <br>
-No caso do Merge Sort, temos:
-a=2 (número de subproblemas) <br>
-b=2 (fator de divisão do problema) <br>
-d=1 (o custo da combinação é linear em relação a 𝑛) <br>
-
-Assim, aplicamos o Teorema Mestre, comparando n^d com n^(logb^a): <br>
-![image](https://github.com/user-attachments/assets/8bf66115-2959-4ae2-a69b-7bdbe820d02a)
+*Expectativa*
+Para o Quicksort clássico, quando a lista está ordenada ou quase ordenada, o pivô escolhido é sempre o maior ou o menor, criando partições desbalanceadas, e isso leva a um caso de pior desempenho, levando assim a cair no pior caso, já para Quicksort Aleatório, ele escolhe o pivô aleatoriamente, reduzindo a probabilidade de cair no pior caso <br>
 
 *Implementação em Python**
 ```python
-import time
 import random
+import time
+import matplotlib.pyplot as plt
 
-# Função Merge Sort
-def merge_sort(arr):
-    if len(arr) > 1:
-        mid = len(arr) // 2  # Encontra o ponto médio
-        L = arr[:mid]  # Dividi a lista ao meio
-        R = arr[mid:]
+# Função de Quicksort Clássico
+def quicksort_classico(arr, inicio, fim):
+    while inicio < fim:
+        p = particionar(arr, inicio, fim)
+        if p - inicio < fim - p:
+            quicksort_classico(arr, inicio, p - 1)
+            inicio = p + 1  # Elimina a recursão à direita
+        else:
+            quicksort_classico(arr, p + 1, fim)
+            fim = p - 1  # Elimina a recursão à esquerda
 
-        merge_sort(L)  # Ordena a primeira metade
-        merge_sort(R)  # Ordena a segunda metade
-
-        i = j = k = 0
-
-        # Merge das duas metades
-        while i < len(L) and j < len(R):
-            if L[i] < R[j]:
-                arr[k] = L[i]
-                i += 1
-            else:
-                arr[k] = R[j]
-                j += 1
-            k += 1
-
-        # Verifica se ainda há elementos em L ou R
-        while i < len(L):
-            arr[k] = L[i]
+def particionar(arr, inicio, fim):
+    pivo = arr[fim]
+    i = inicio - 1
+    for j in range(inicio, fim):
+        if arr[j] <= pivo:
             i += 1
-            k += 1
+            arr[i], arr[j] = arr[j], arr[i]
+    arr[i + 1], arr[fim] = arr[fim], arr[i + 1]
+    return i + 1
 
-        while j < len(R):
-            arr[k] = R[j]
-            j += 1
-            k += 1
+# Função de Quicksort Aleatório
+def quicksort_aleatorio(arr, inicio, fim):
+    while inicio < fim:
+        p = particionar_aleatorio(arr, inicio, fim)
+        if p - inicio < fim - p:
+            quicksort_aleatorio(arr, inicio, p - 1)
+            inicio = p + 1  # Elimina a recursão à direita
+        else:
+            quicksort_aleatorio(arr, p + 1, fim)
+            fim = p - 1  # Elimina a recursão à esquerda
 
-# Medir o tempo de execução
-def measure_time(n):
-    arr = random.sample(range(n), n)  # Gera uma lista aleatória
-    start_time = time.time()
-    merge_sort(arr)
-    end_time = time.time()
-    return end_time - start_time
+def particionar_aleatorio(arr, inicio, fim):
+    pivo_index = random.randint(inicio, fim)
+    arr[pivo_index], arr[fim] = arr[fim], arr[pivo_index]
+    return particionar(arr, inicio, fim)
 
-for size in [1000, 2000, 5000, 10000, 20000]:
-    exec_time = measure_time(size)
-    print(f"Tamanho da entrada: {size}, Tempo de execução: {exec_time:.6f} segundos")
+# Função para medir o tempo de execução
+def medir_tempo(func, arr, *args):
+    inicio = time.time()
+    func(arr, *args)
+    fim = time.time()
+    return fim - inicio
+
+# Tamanhos das listas para o experimento
+tamanhos = [1000, 5000, 10000]
+resultados_classico = {'aleatorio': [], 'ordenado': [], 'quase_ordenado': []}
+resultados_aleatorio = {'aleatorio': [], 'ordenado': [], 'quase_ordenado': []}
+
+# Experimento
+for n in tamanhos:
+    # Casos de teste
+    lista_aleatoria = random.sample(range(n), n)
+    lista_ordenada = list(range(n))
+    lista_quase_ordenada = list(range(n))
+    for i in range(0, n, 50):  # Perturba alguns elementos na lista quase ordenada
+        lista_quase_ordenada[i] = random.randint(0, n)
+    
+    # Executando Quicksort Clássico
+    resultados_classico['aleatorio'].append(medir_tempo(quicksort_classico, lista_aleatoria[:], 0, n - 1))
+    resultados_classico['ordenado'].append(medir_tempo(quicksort_classico, lista_ordenada[:], 0, n - 1))
+    resultados_classico['quase_ordenado'].append(medir_tempo(quicksort_classico, lista_quase_ordenada[:], 0, n - 1))
+    
+    # Executando Quicksort Aleatório
+    resultados_aleatorio['aleatorio'].append(medir_tempo(quicksort_aleatorio, lista_aleatoria[:], 0, n - 1))
+    resultados_aleatorio['ordenado'].append(medir_tempo(quicksort_aleatorio, lista_ordenada[:], 0, n - 1))
+    resultados_aleatorio['quase_ordenado'].append(medir_tempo(quicksort_aleatorio, lista_quase_ordenada[:], 0, n - 1))
+
+# Plotando os resultados
+plt.figure(figsize=(15, 8))
+tipos = ['aleatorio', 'ordenado', 'quase_ordenado']
+for i, tipo in enumerate(tipos):
+    plt.subplot(1, 3, i + 1)
+    plt.plot(tamanhos, resultados_classico[tipo], label='Quicksort Clássico', marker='o')
+    plt.plot(tamanhos, resultados_aleatorio[tipo], label='Quicksort Aleatório', marker='x')
+    plt.title(f'Lista {tipo.capitalize()}')
+    plt.xlabel('Tamanho da lista')
+    plt.ylabel('Tempo de execução (s)')
+    plt.legend()
+
+plt.tight_layout()
+plt.show()
+
 ```
 ![image](https://github.com/user-attachments/assets/019fbaed-3dbd-42e2-aef4-7bf6aa851e7d) <br>
 Assim, O tempo de execução está aumentando, mas não de maneira linear,que é o que era esperado, já que o Merge Sort tem complexidade  O(n log n)
