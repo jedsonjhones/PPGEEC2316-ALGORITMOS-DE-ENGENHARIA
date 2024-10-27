@@ -176,28 +176,113 @@ plt.tight_layout()
 plt.show()
 
 ```
-![image](https://github.com/user-attachments/assets/019fbaed-3dbd-42e2-aef4-7bf6aa851e7d) <br>
-Assim, O tempo de execução está aumentando, mas não de maneira linear,que é o que era esperado, já que o Merge Sort tem complexidade  O(n log n)
+![image](https://github.com/user-attachments/assets/9719cc5e-6f44-4adc-babc-b2dcc6dcd022) <br>
+Assim, apartir dos experimentos vemos que o Quicksort Aleatório é uma boa esxolha em listas ordenadas e quase ordenadas, onde o Quicksort Clássico tende a cair no pior caso.
 
 
 # Questão 3:
 
-**O problema de balanceamento de cargas busca atribuir tarefas de tamanhos diferentes a trabalhadores, de modo a minimizar a carga máxima que um trabalhador irá executar. Em um problema em que temos n tarefas e k trabalhadores (n > k), considere que o balanceador irá distribuir as n/k primeiras tarefas para o primeiro trabalhador, as n/k tarefas seguintes para o segundo trabalhador, e assim por diante. Mostre numericamente como permutar aleatoriamente os dados de entrada, que são as cargas de cada tarefa, pode influenciar na solução desse balanceador.** <br>
+**Mostre com experimentos numéricos quando o Radix-sort com o Count-sort é mais rápido que o Count-sort sozinho. Utilize suas próprias implementações ou alguma implementação existente explicando os resultados** <br>
 
-Se eu por exemplo considerar Considere n=6 tarefas e k=2 trabalhadores e Tamanhos das tarefas: [5,2,4,7,1,3]:
-<br>
+**Radix Sort:** Algoritmo de ordenação baseado na posição dos dígitos, que ordena os elementos dígito por dígito (ou bit a bit) do menor para o maior dígito (ou inversamente). Ele é eficiente para listas grandes com números de vários dígitos, usando Counting Sort para ordenar em cada posição de dígito. <br>
 
-se eu fizer uma Distribuição sem permutação eu vou ter:<br>
-Trabalhador 1: [5,2,4] → Carga total = 5 + 2 + 4 = 11 <br>
-Trabalhador 2: [7,1,3] → Carga total = 7 + 1 + 3 = 11. <br>
-assim a carga máxima atribuída a um trabalhador é 11. <br>
-<br>
-Agora se eu fizer uma permutação aleatória das tarefas: <br>
-Permutação aleatória, por exemplo: [4,1,7,2,3,5]. <br>
-Trabalhador 1: [4,1,7] → Carga total = 4 + 1 + 7 = 12. <br>
-Trabalhador 2: [2,3,5] → Carga total = 2 + 3 + 5 = 10. <br>
-A carga máxima agora é 12. <br>
+**Counting Sort:** Algoritmo de ordenação linear, que conta o número de ocorrências de cada valor e reorganiza os elementos com base nesses contadores. É mais eficiente para listas com um intervalo de valores limitado, mas sua complexidade aumenta com o tamanho do intervalo. <br>
 
-Assim podemos notar que a permutação aleatória das tarefas pode resultar em uma distribuição de cargas que aumenta ou diminui a carga 
-máxima atribuída aos trabalhadores.
+Assim o Radix Sort é mais eficiente em listas com valores grandes (como números com muitos dígitos), enquanto o Counting Sort é vantajoso para listas de números pequenos ou com intervalos pequenos. <br>
+
+Assim o caso em que o Radix-sort com o Count-sort vai ser mais rapido que o Count-sort sozinho, vai ser quando em tiver utilizando listas de numeros grandes.<br>
+
+
+
+```python
+import time
+import random
+import matplotlib.pyplot as plt
+
+# Função de Counting Sort para listas com valores grandes
+def counting_sort(arr):
+    max_val = max(arr)  # Encontrar o valor máximo
+    count = [0] * (max_val + 1)  # Array de contagem baseado no valor máximo
+
+    # Contagem das ocorrências
+    for num in arr:
+        count[num] += 1
+
+    # Reconstruindo o array ordenado
+    index = 0
+    for i, freq in enumerate(count):
+        for _ in range(freq):
+            arr[index] = i
+            index += 1
+
+# Função de Counting Sort para ser usada dentro do Radix Sort (ordena por dígito)
+def counting_sort_for_radix(arr, exp):
+    n = len(arr)
+    output = [0] * n
+    count = [0] * 10  # Radix usa base 10 (dígitos 0 a 9)
+
+    # Contagem das ocorrências baseadas no dígito atual
+    for num in arr:
+        index = (num // exp) % 10
+        count[index] += 1
+
+    # Atualiza o array de contagem para posição final
+    for i in range(1, 10):
+        count[i] += count[i - 1]
+
+    # Construção do array de saída ordenado pelo dígito atual
+    for i in range(n - 1, -1, -1):
+        index = (arr[i] // exp) % 10
+        output[count[index] - 1] = arr[i]
+        count[index] -= 1
+
+    # Copia para o array original
+    for i in range(n):
+        arr[i] = output[i]
+
+# Função de Radix Sort usando Counting Sort como sub-rotina
+def radix_sort(arr):
+    max_val = max(arr)
+    exp = 1
+    while max_val // exp > 0:
+        counting_sort_for_radix(arr, exp)
+        exp *= 10
+
+# Função para medir o tempo de execução de uma função de ordenação
+def medir_tempo(func, arr):
+    inicio = time.time()
+    func(arr)
+    fim = time.time()
+    return fim - inicio
+
+# Tamanhos das listas para o experimento
+tamanhos = [1000, 5000, 10000]
+resultados_counting = []
+resultados_radix = []
+
+# Experimento com listas de números grandes
+for n in tamanhos:
+    # Lista com números grandes (6 dígitos)
+    lista_grandes_numeros = [random.randint(100000, 999999) for _ in range(n)]
+    
+    # Executando Counting Sort em números grandes
+    tempo_counting = medir_tempo(counting_sort, lista_grandes_numeros[:])
+    resultados_counting.append(tempo_counting)
+    
+    # Executando Radix Sort em números grandes
+    tempo_radix = medir_tempo(radix_sort, lista_grandes_numeros[:])
+    resultados_radix.append(tempo_radix)
+
+# Plotando os resultados
+plt.figure(figsize=(10, 5))
+plt.plot(tamanhos, resultados_counting, label='Counting Sort em números grandes', marker='o')
+plt.plot(tamanhos, resultados_radix, label='Radix Sort em números grandes', marker='x')
+plt.xlabel('Tamanho da lista')
+plt.ylabel('Tempo de execução (s)')
+plt.legend()
+plt.title('Comparação de Desempenho: Counting Sort vs. Radix Sort com números grandes')
+plt.show()
+```
+
+
 
