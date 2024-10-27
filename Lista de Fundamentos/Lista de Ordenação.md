@@ -284,5 +284,7 @@ plt.title('Comparação de Desempenho: Counting Sort vs. Radix Sort com números
 plt.show()
 ```
 
+![image](https://github.com/user-attachments/assets/b3ee5da7-0f76-4193-8df4-d3752ebfa458)
+
 
 
