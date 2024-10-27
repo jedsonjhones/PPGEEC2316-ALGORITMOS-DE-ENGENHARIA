@@ -71,6 +71,7 @@ class HeapMaximo:
         return str(self.heap)
 
 ```
+![image](https://github.com/user-attachments/assets/be9b16ac-3b64-4e7e-a1a3-8c8569ab943c)
 
 
 
@@ -80,7 +81,7 @@ class HeapMaximo:
 
 # Questão 2:
 
-**Escolha um algoritmo recorrente para aplicar um dos 4 métodos de resolução de recorrência descritos no capítulo 4 para medir o custo da recorrência do algoritmo escolhido. Compare o resultado com medições de tempo.**
+**Mostre com experimentos numéricos quando suas próprias implementações de Quicksort e do Quicksort aleatório são mais vantajosas quando comparadas uma com a outra.**
 
 *Merge Sort*
 O algoritmo escolhido foi o Merge Sort, e ele segue o paradigma de "dividir e conquistar" e possui a seguinte função de recorrência para seu tempo de execução T(n): <br>
