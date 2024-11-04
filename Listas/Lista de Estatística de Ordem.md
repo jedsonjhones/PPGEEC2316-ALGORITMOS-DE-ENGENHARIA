@@ -67,7 +67,7 @@ print("Tempo (Não-Simultâneo):", time_non_simultaneous, "segundos")
 print("Mínimo:", min_val_simultaneous, "| Máximo:", max_val_simultaneous)
 
 ```
-![image](https://github.com/user-attachments/assets/be9b16ac-3b64-4e7e-a1a3-8c8569ab943c)
+![image](https://github.com/user-attachments/assets/364dabdf-68dd-4657-8140-8d888766b55e)
 
 
 
@@ -77,108 +77,10 @@ print("Mínimo:", min_val_simultaneous, "| Máximo:", max_val_simultaneous)
 
 # Questão 2:
 
-**Mostre com experimentos numéricos quando suas próprias implementações de Quicksort e do Quicksort aleatório são mais vantajosas quando comparadas uma com a outra.**
-
-*Expectativa*
-Para o Quicksort clássico, quando a lista está ordenada ou quase ordenada, o pivô escolhido é sempre o maior ou o menor, criando partições desbalanceadas, e isso leva a um caso de pior desempenho, levando assim a cair no pior caso, já para Quicksort Aleatório, ele escolhe o pivô aleatoriamente, reduzindo a probabilidade de cair no pior caso <br>
-
-*Implementação em Python**
-```python
-import random
-import time
-import matplotlib.pyplot as plt
-
-# Função de Quicksort Clássico
-def quicksort_classico(arr, inicio, fim):
-    while inicio < fim:
-        p = particionar(arr, inicio, fim)
-        if p - inicio < fim - p:
-            quicksort_classico(arr, inicio, p - 1)
-            inicio = p + 1  # Elimina a recursão à direita
-        else:
-            quicksort_classico(arr, p + 1, fim)
-            fim = p - 1  # Elimina a recursão à esquerda
-
-def particionar(arr, inicio, fim):
-    pivo = arr[fim]
-    i = inicio - 1
-    for j in range(inicio, fim):
-        if arr[j] <= pivo:
-            i += 1
-            arr[i], arr[j] = arr[j], arr[i]
-    arr[i + 1], arr[fim] = arr[fim], arr[i + 1]
-    return i + 1
-
-# Função de Quicksort Aleatório
-def quicksort_aleatorio(arr, inicio, fim):
-    while inicio < fim:
-        p = particionar_aleatorio(arr, inicio, fim)
-        if p - inicio < fim - p:
-            quicksort_aleatorio(arr, inicio, p - 1)
-            inicio = p + 1  # Elimina a recursão à direita
-        else:
-            quicksort_aleatorio(arr, p + 1, fim)
-            fim = p - 1  # Elimina a recursão à esquerda
-
-def particionar_aleatorio(arr, inicio, fim):
-    pivo_index = random.randint(inicio, fim)
-    arr[pivo_index], arr[fim] = arr[fim], arr[pivo_index]
-    return particionar(arr, inicio, fim)
-
-# Função para medir o tempo de execução
-def medir_tempo(func, arr, *args):
-    inicio = time.time()
-    func(arr, *args)
-    fim = time.time()
-    return fim - inicio
-
-# Tamanhos das listas para o experimento
-tamanhos = [1000, 5000, 10000]
-resultados_classico = {'aleatorio': [], 'ordenado': [], 'quase_ordenado': []}
-resultados_aleatorio = {'aleatorio': [], 'ordenado': [], 'quase_ordenado': []}
-
-# Experimento
-for n in tamanhos:
-    # Casos de teste
-    lista_aleatoria = random.sample(range(n), n)
-    lista_ordenada = list(range(n))
-    lista_quase_ordenada = list(range(n))
-    for i in range(0, n, 50):  # Perturba alguns elementos na lista quase ordenada
-        lista_quase_ordenada[i] = random.randint(0, n)
-    
-    # Executando Quicksort Clássico
-    resultados_classico['aleatorio'].append(medir_tempo(quicksort_classico, lista_aleatoria[:], 0, n - 1))
-    resultados_classico['ordenado'].append(medir_tempo(quicksort_classico, lista_ordenada[:], 0, n - 1))
-    resultados_classico['quase_ordenado'].append(medir_tempo(quicksort_classico, lista_quase_ordenada[:], 0, n - 1))
-    
-    # Executando Quicksort Aleatório
-    resultados_aleatorio['aleatorio'].append(medir_tempo(quicksort_aleatorio, lista_aleatoria[:], 0, n - 1))
-    resultados_aleatorio['ordenado'].append(medir_tempo(quicksort_aleatorio, lista_ordenada[:], 0, n - 1))
-    resultados_aleatorio['quase_ordenado'].append(medir_tempo(quicksort_aleatorio, lista_quase_ordenada[:], 0, n - 1))
-
-# Plotando os resultados
-plt.figure(figsize=(15, 8))
-tipos = ['aleatorio', 'ordenado', 'quase_ordenado']
-for i, tipo in enumerate(tipos):
-    plt.subplot(1, 3, i + 1)
-    plt.plot(tamanhos, resultados_classico[tipo], label='Quicksort Clássico', marker='o')
-    plt.plot(tamanhos, resultados_aleatorio[tipo], label='Quicksort Aleatório', marker='x')
-    plt.title(f'Lista {tipo.capitalize()}')
-    plt.xlabel('Tamanho da lista')
-    plt.ylabel('Tempo de execução (s)')
-    plt.legend()
-
-plt.tight_layout()
-plt.show()
-
-```
-![image](https://github.com/user-attachments/assets/9719cc5e-6f44-4adc-babc-b2dcc6dcd022) <br>
-Assim, apartir dos experimentos vemos que o Quicksort Aleatório é uma boa esxolha em listas ordenadas e quase ordenadas, onde o Quicksort Clássico tende a cair no pior caso.
-
 
 # Questão 3:
 
-**Mostre com experimentos numéricos quando o Radix-sort com o Count-sort é mais rápido que o Count-sort sozinho. Utilize suas próprias implementações ou alguma implementação existente explicando os resultados** <br>
+**Implemente o algoritmo da mediana ponderada e use-o para resolver o item e do Problema 9-3 do Cormen, 4a Ed.** <br>
 
 **Radix Sort:** Algoritmo de ordenação baseado na posição dos dígitos, que ordena os elementos dígito por dígito (ou bit a bit) do menor para o maior dígito (ou inversamente). Ele é eficiente para listas grandes com números de vários dígitos, usando Counting Sort para ordenar em cada posição de dígito. <br>
 
