@@ -82,16 +82,6 @@ print("Mínimo:", min_val_simultaneous, "| Máximo:", max_val_simultaneous)
 
 **Implemente o algoritmo da mediana ponderada e use-o para resolver o item e do Problema 9-3 do Cormen, 4a Ed.** <br>
 
-**Radix Sort:** Algoritmo de ordenação baseado na posição dos dígitos, que ordena os elementos dígito por dígito (ou bit a bit) do menor para o maior dígito (ou inversamente). Ele é eficiente para listas grandes com números de vários dígitos, usando Counting Sort para ordenar em cada posição de dígito. <br>
-
-**Counting Sort:** Algoritmo de ordenação linear, que conta o número de ocorrências de cada valor e reorganiza os elementos com base nesses contadores. É mais eficiente para listas com um intervalo de valores limitado, mas sua complexidade aumenta com o tamanho do intervalo. <br>
-
-Assim o Radix Sort é mais eficiente em listas com valores grandes (como números com muitos dígitos), enquanto o Counting Sort é vantajoso para listas de números pequenos ou com intervalos pequenos. <br>
-
-Assim o caso em que o Radix-sort com o Count-sort vai ser mais rapido que o Count-sort sozinho, vai ser quando em tiver utilizando listas de numeros grandes.<br>
-
-
-
 ```python
 def weighted_median(values, weights):
     # Ordenar os elementos por valores
@@ -117,7 +107,8 @@ print("A mediana ponderada é:", median)
 
 ```
 
-![image](https://github.com/user-attachments/assets/b3ee5da7-0f76-4193-8df4-d3752ebfa458)
+![image](https://github.com/user-attachments/assets/a1b8a718-6d73-4fdd-8c5a-e109414f133f)
+
 
 
 
