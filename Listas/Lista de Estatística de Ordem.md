@@ -93,93 +93,28 @@ Assim o caso em que o Radix-sort com o Count-sort vai ser mais rapido que o Coun
 
 
 ```python
-import time
-import random
-import matplotlib.pyplot as plt
+def weighted_median(values, weights):
+    # Ordenar os elementos por valores
+    sorted_data = sorted(zip(values, weights), key=lambda x: x[0])
+    values_sorted, weights_sorted = zip(*sorted_data)
 
-# Função de Counting Sort para listas com valores grandes
-def counting_sort(arr):
-    max_val = max(arr)  # Encontrar o valor máximo
-    count = [0] * (max_val + 1)  # Array de contagem baseado no valor máximo
+    # Calcular a soma total dos pesos
+    total_weight = sum(weights_sorted)
+    half_weight = total_weight / 2
 
-    # Contagem das ocorrências
-    for num in arr:
-        count[num] += 1
+    # Encontra o ponto onde a soma acumulada dos pesos atinge metade do peso total
+    cumulative_weight = 0
+    for i in range(len(values_sorted)):
+        cumulative_weight += weights_sorted[i]
+        if cumulative_weight >= half_weight:
+            return values_sorted[i]  # Mediana ponderada encontrada
+# Aplicando
+values = [1, 2, 3, 4, 5]
+weights = [2, 1, 5, 1, 2]
 
-    # Reconstruindo o array ordenado
-    index = 0
-    for i, freq in enumerate(count):
-        for _ in range(freq):
-            arr[index] = i
-            index += 1
+median = weighted_median(values, weights)
+print("A mediana ponderada é:", median)
 
-# Função de Counting Sort para ser usada dentro do Radix Sort (ordena por dígito)
-def counting_sort_for_radix(arr, exp):
-    n = len(arr)
-    output = [0] * n
-    count = [0] * 10  # Radix usa base 10 (dígitos 0 a 9)
-
-    # Contagem das ocorrências baseadas no dígito atual
-    for num in arr:
-        index = (num // exp) % 10
-        count[index] += 1
-
-    # Atualiza o array de contagem para posição final
-    for i in range(1, 10):
-        count[i] += count[i - 1]
-
-    # Construção do array de saída ordenado pelo dígito atual
-    for i in range(n - 1, -1, -1):
-        index = (arr[i] // exp) % 10
-        output[count[index] - 1] = arr[i]
-        count[index] -= 1
-
-    # Copia para o array original
-    for i in range(n):
-        arr[i] = output[i]
-
-# Função de Radix Sort usando Counting Sort como sub-rotina
-def radix_sort(arr):
-    max_val = max(arr)
-    exp = 1
-    while max_val // exp > 0:
-        counting_sort_for_radix(arr, exp)
-        exp *= 10
-
-# Função para medir o tempo de execução de uma função de ordenação
-def medir_tempo(func, arr):
-    inicio = time.time()
-    func(arr)
-    fim = time.time()
-    return fim - inicio
-
-# Tamanhos das listas para o experimento
-tamanhos = [1000, 5000, 10000]
-resultados_counting = []
-resultados_radix = []
-
-# Experimento com listas de números grandes
-for n in tamanhos:
-    # Lista com números grandes (6 dígitos)
-    lista_grandes_numeros = [random.randint(100000, 999999) for _ in range(n)]
-    
-    # Executando Counting Sort em números grandes
-    tempo_counting = medir_tempo(counting_sort, lista_grandes_numeros[:])
-    resultados_counting.append(tempo_counting)
-    
-    # Executando Radix Sort em números grandes
-    tempo_radix = medir_tempo(radix_sort, lista_grandes_numeros[:])
-    resultados_radix.append(tempo_radix)
-
-# Plotando os resultados
-plt.figure(figsize=(10, 5))
-plt.plot(tamanhos, resultados_counting, label='Counting Sort em números grandes', marker='o')
-plt.plot(tamanhos, resultados_radix, label='Radix Sort em números grandes', marker='x')
-plt.xlabel('Tamanho da lista')
-plt.ylabel('Tempo de execução (s)')
-plt.legend()
-plt.title('Comparação de Desempenho: Counting Sort vs. Radix Sort com números grandes')
-plt.show()
 ```
 
 ![image](https://github.com/user-attachments/assets/b3ee5da7-0f76-4193-8df4-d3752ebfa458)
