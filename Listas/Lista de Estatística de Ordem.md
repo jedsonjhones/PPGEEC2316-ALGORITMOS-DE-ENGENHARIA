@@ -1,74 +1,70 @@
 # Questão 1: 
 
-**Implemente as funções da seção 6.5 do livro do Cormen 4th Ed. em sua linguagem favorita e proponha um exemplo de uso com uma demonstração.** <br>
-
-Essa seção do livro do Cormen, trata de operações sobre heaps, sendo as suas fonções nessa seção sobre heaps de máximo.
-<br>
-
-*heap_maximum: Retorna o maior elemento do heap.* <br>
-*heap_extract_max: Remove e retorna o maior elemento do heap.* <br>
-*max_heap_insert: Insere um novo elemento no heap.* <br>
-*heap_increase_key: Aumenta a chave de um elemento no heap.* <br>
-
+**Implemente o algoritmo de mínimo e máximo simultâneos da seção 9.1 do livro do Cormen, 4a Ed na sua linguagem favorita e mostre através de medição de tempo que é mais rápido que a abordagem não-simultânea para um vetor de entrada suficientemente grande.** <br>
 
 #### Implementação em python: <br>
 
 ```python
-import math
+import random
+import time
 
-class HeapMaximo:
-    def __init__(self):
-        self.heap = []
+# Encontra o mínimo e o máximo simultâneos
+def min_max_simultaneous(arr):
+    n = len(arr)
+    if n == 0:
+        return None, None
+    elif n == 1:
+        return arr[0], arr[0]
+    
+    # Inicializa min_val e max_val usando o primeiro par de elementos
+    if arr[0] < arr[1]:
+        min_val, max_val = arr[0], arr[1]
+    else:
+        min_val, max_val = arr[1], arr[0]
 
-    def pai(self, i):
-        return (i - 1) // 2
+    # Processa pares restantes
+    for i in range(2, n - 1, 2):
+        if arr[i] < arr[i + 1]:
+            min_val = min(min_val, arr[i])
+            max_val = max(max_val, arr[i + 1])
+        else:
+            min_val = min(min_val, arr[i + 1])
+            max_val = max(max_val, arr[i])
 
-    def esquerdo(self, i):
-        return 2 * i + 1
+    # Se o número de elementos for ímpar, compara o último elemento
+    if n % 2 == 1:
+        min_val = min(min_val, arr[-1])
+        max_val = max(max_val, arr[-1])
 
-    def direito(self, i):
-        return 2 * i + 2
+    return min_val, max_val
 
-    def heap_maximo(self):
-        if len(self.heap) == 0:
-            raise IndexError("Heap está vazio")
-        return self.heap[0]
+# Abordagem não-simultânea
+def min_non_simultaneous(arr):
+    return min(arr)
 
-    def extrair_maximo(self):
-        if len(self.heap) < 1:
-            raise IndexError("Heap está vazio")
-        maximo = self.heap[0]
-        self.heap[0] = self.heap[-1]
-        self.heap.pop()
-        self.max_heapificar(0)
-        return maximo
+def max_non_simultaneous(arr):
+    return max(arr)
 
-    def max_heapificar(self, i):
-        esq = self.esquerdo(i)
-        dir = self.direito(i)
-        maior = i
-        if esq < len(self.heap) and self.heap[esq] > self.heap[i]:
-            maior = esq
-        if dir < len(self.heap) and self.heap[dir] > self.heap[maior]:
-            maior = dir
-        if maior != i:
-            self.heap[i], self.heap[maior] = self.heap[maior], self.heap[i]
-            self.max_heapificar(maior)
+# Gerando um vetor grande de números aleatórios
+arr = random.sample(range(20_000_000), k=10_000_000)
 
-    def aumentar_chave(self, i, chave):
-        if chave < self.heap[i]:
-            raise ValueError("A nova chave é menor que a chave atual")
-        self.heap[i] = chave
-        while i > 0 and self.heap[self.pai(i)] < self.heap[i]:
-            self.heap[i], self.heap[self.pai(i)] = self.heap[self.pai(i)], self.heap[i]
-            i = self.pai(i)
+# Medindo o tempo para o algoritmo de mínimo e máximo simultâneos
+start_time_simultaneous = time.time()
+min_val_simultaneous, max_val_simultaneous = min_max_simultaneous(arr)
+end_time_simultaneous = time.time()
+time_simultaneous = end_time_simultaneous - start_time_simultaneous
 
-    def inserir(self, chave):
-        self.heap.append(-math.inf)
-        self.aumentar_chave(len(self.heap) - 1, chave)
+# Medindo o tempo para a abordagem não-simultânea
+start_time_non_simultaneous = time.time()
+min_val_non_simultaneous = min_non_simultaneous(arr)
+max_val_non_simultaneous = max_non_simultaneous(arr)
+end_time_non_simultaneous = time.time()
+time_non_simultaneous = end_time_non_simultaneous - start_time_non_simultaneous
 
-    def __str__(self):
-        return str(self.heap)
+# Resultados
+print("Tempo (Simultâneo):", time_simultaneous, "segundos")
+print("Tempo (Não-Simultâneo):", time_non_simultaneous, "segundos")
+print("Mínimo:", min_val_simultaneous, "| Máximo:", max_val_simultaneous)
 
 ```
 ![image](https://github.com/user-attachments/assets/be9b16ac-3b64-4e7e-a1a3-8c8569ab943c)
